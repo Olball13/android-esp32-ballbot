@@ -9,11 +9,11 @@ import android.hardware.SensorManager;
 public class IMU implements SensorEventListener {
 
     // Volatile to update to all systems quickly
-    private volatile float pitch, roll, yaw, pitchR, rollR, yawR;
+    private volatile float pitch, roll, yaw, yawR, tiltHeading, tiltMagnitude, tiltRadPerSec;
 
     // Custom Listener
     public interface IMUListener {
-        void onOrientationChanged( float pitch, float roll, float yaw, float pitchR, float rollR, float yawR);
+        void onOrientationChanged( float pitch, float roll, float yaw, float yawR, float tiltHeading, float tiltMagnitude, float tiltRadPerSec);
     }
 
     float[] rotationMatrix = new float[9];
@@ -31,7 +31,7 @@ public class IMU implements SensorEventListener {
         if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
             // Sensor Available
             // Gyroscope to measure the rate of angular change for the derivative term of the control loop
-            gameRotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+            gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         }
 
         if (sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null) {
@@ -49,18 +49,24 @@ public class IMU implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (listener == null) return; // No listener set! Nowhere to update too
+        if (listener == null) return; // No listener set! Nowhere to update to
 
         // Check if the sensor that is used is the one that changed
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
 
             // Update rotation rate variables
             yawR = event.values[0];
-            pitchR = event.values[1];
-            rollR = event.values[2];
+            float pitchR = event.values[1];
+            float rollR = event.values[2];
+
+            if (tiltMagnitude == 0) {
+                tiltRadPerSec = 0;
+            } else {
+                tiltRadPerSec = ((roll * rollR) + (pitch * pitchR))/tiltMagnitude;
+            }
 
             // Send data to the Activity
-            listener.onOrientationChanged(pitch, roll, yaw, pitchR, rollR, yawR);
+            listener.onOrientationChanged(pitch, roll, yaw, yawR, tiltHeading, tiltMagnitude, tiltRadPerSec);
 
         } else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
 
@@ -69,19 +75,22 @@ public class IMU implements SensorEventListener {
             SensorManager.getOrientation(rotationMatrix, orientationAngles);
 
             // Update rotation variables
-            yaw   = (float) Math.toDegrees(orientationAngles[0]); // Rotation around Z-axis
-            pitch = (float) Math.toDegrees(orientationAngles[1]); // Rotation around X-axis
-            roll = (float) Math.toDegrees(orientationAngles[2]); // Rotation around Y-axis
+            yaw = orientationAngles[0]; // Rotation around Z-axis
+            pitch = orientationAngles[1]; // Rotation around X-axis
+            roll = orientationAngles[2]; // Rotation around Y-axis
+
+            tiltHeading = (float) Math.atan2(pitch, roll);
+            tiltMagnitude = (float) Math.sqrt(Math.pow(pitch, 2) + Math.pow(roll, 2));
 
             // Send data to the Activity
-            listener.onOrientationChanged(pitch, roll, yaw, pitchR, rollR, yawR);
+            listener.onOrientationChanged(pitch, roll, yaw, yawR, tiltHeading, tiltMagnitude, tiltRadPerSec);
         }
     }
 
     public void startListening() {
         if (gameRotationVectorSensor != null || gyroscopeSensor != null) {
             sensorManager.registerListener(this, gameRotationVectorSensor, SensorManager.SENSOR_DELAY_FASTEST); // Needed for quick corrections
-            sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST); // Needed for quick corrections
+            sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
         }
     }
 

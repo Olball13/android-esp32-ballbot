@@ -8,6 +8,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="16dp"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
     <TextView
@@ -39,11 +40,82 @@
         android:textSize="24sp" />
 
     <TextView
+        android:id="@+id/tiltHeadingInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Tilt Heading: 0.0 deg"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tiltMagnitudeInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tilt Magnitude: 0.0 deg"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tiltRoRInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tilt Rate of Rotation: 0.0 rad/s"
+        android:textSize="24sp" />
+
+    <TextView
         android:id="@+id/ControlHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
-        android:text="Control Loop"
+        android:text="Control Constants"
         android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/kpInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kp: 0.0"
+        android:textSize="20sp" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/kpSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stepSize="0.1"
+        android:value="0.0"
+        android:valueFrom="0.0"
+        android:valueTo="50.0" />
+
+    <TextView
+        android:id="@+id/kdInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kd: 0.0"
+        android:textSize="20sp" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/kdSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stepSize="0.1"
+        android:value="0.0"
+        android:valueFrom="0.0"
+        android:valueTo="50.0" />
+
+    <TextView
+        android:id="@+id/kfInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kf: 0.0"
+        android:textSize="20sp" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/kfSlider"
+        android:layout_width="wrap_content"
+        android:layout_height="126dp"
+        android:stepSize="0.1"
+        android:value="0.0"
+        android:valueFrom="0.0"
+        android:valueTo="50.0" />
+
 
 </LinearLayout>

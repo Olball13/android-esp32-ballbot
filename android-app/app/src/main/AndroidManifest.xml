@@ -5,6 +5,9 @@
     <!-- USB Host Feature -->
     <uses-feature android:name="android.hardware.usb.host" android:required="true" />
 
+    <!-- Needed for gathering motion sensor data at a higher rate-->
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
