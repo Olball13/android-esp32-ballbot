@@ -15,12 +15,22 @@ public class PDFController {
     }
 
     public void setKf(float kf) {
-        this.kp = kf;
+        this.kf = kf;
     }
+
     public float output(float tiltMagnitude, float tiltRadPerSec) {
         float setpoint = 0;
-        float error = setpoint - tiltMagnitude;
-        return (float) (kp * error + kd * -tiltRadPerSec + kf * Math.sin(tiltMagnitude)); // -tiltRadPerSec because its Rad/s of error
+
+        float error = setpoint + tiltMagnitude; // tilt Magnitude is error
+        float pOutput = kp * error;
+
+        // -tiltRadPerSec for Rad/s of error
+        float dOutput = kd * -tiltRadPerSec;
+
+        // Using tiltMagnitude radian value to display gravity through a sine input
+        float fOutput = (float) (kf * Math.abs(Math.sin(tiltMagnitude)));
+
+        return pOutput + dOutput + fOutput;
     }
 
 }

@@ -23,21 +23,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pitch: 0.0 deg"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/rollInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Roll: 0.0 deg"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/yawInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Yaw: 0.0 deg"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tiltHeadingInput"
@@ -45,27 +45,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Tilt Heading: 0.0 deg"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tiltMagnitudeInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tilt Magnitude: 0.0 deg"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tiltRoRInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tilt Rate of Rotation: 0.0 rad/s"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/ControlHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
+        android:layout_marginVertical="5dp"
         android:text="Control Constants"
         android:textSize="30sp" />
 
@@ -116,6 +116,13 @@
         android:value="0.0"
         android:valueFrom="0.0"
         android:valueTo="50.0" />
+
+    <TextView
+        android:id="@+id/controlInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Control Output: 0.0"
+        android:textSize="20sp" />
 
 
 </LinearLayout>
