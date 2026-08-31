@@ -39,7 +39,7 @@ Though this project is for my education, I plan to make this open-source, instru
 
 <img alt="Picture of a 3D-Printed Omni Wheel" src="images/OmniWheel.png" width="400"/>
 
-In the search to find a cheap alternative to expensive omni wheels on the market, I decided to print my own! Though I have not tested the quality/functionality of the design yet, I plan to perfect the model once I have access to my school's 3D-printer next September. Standard PLA is strong enough for the design but some TPU with 95+ hardness would be ideal to print the rollers. I plan to use modified finishing nails as axles and M3 bolts & screws to Couple the wheels with the motors.
+In the search to find a cheap alternative to expensive omni wheels on the market, I decided to print my own! Though I have not tested the quality/functionality of the design yet, I plan to perfect the model once I have access to my school's 3D-printer next September. Standard PLA is strong enough for the plates but some TPU with 95+ hardness would be ideal to print the rollers. An alternate design using heat shrink tubing can be explored in the future. I plan to use modified finishing nails as axles and M3 bolts & screws to Couple the wheels with the motors.
 
 
 ## Software Stack
@@ -75,7 +75,7 @@ The type of controller used to keep the ballbot balanced is a Proportional Deriv
 > * `θ` : Current 1D tilt magnitude from vertical position
 > * `Kf` : Simplified gravity compensation gain (``m * g * l``)
 
-The whole PD+F equation finds the general 1D magnitude of compensation. What I mean by this is that the equation only looks at the tilt from one vector. Before this equation, the heading of where the bot is tilting and the magnitude of tilt is found from averaging the pitch and roll readings. The controller then calculates the compensation from that 1D perspective. This is better then the messiness of having two PID controllers responding to both Pitch and Roll errors and trying to combine them together.
+The whole PD+F equation finds the general 1D magnitude of compensation. What I mean by this is that the equation only looks at the tilt from one vector. Before this equation, the heading of where the bot is tilting and the magnitude of tilt is found from averaging the pitch and roll readings. The controller then calculates the compensation from that 1D perspective. This is better then the messiness of having two PID controllers separately responding to Pitch and Roll errors and trying to combine them together.
 
 
 
@@ -85,7 +85,7 @@ The whole PD+F equation finds the general 1D magnitude of compensation. What I m
 *To start this project, I will create a "proof of concept", to learn the basics and to later build off a simple framework. I will use a failed print from V1 of my Chassis model, and just focus on balancing without complex encoder kinematics to center the bot's position.*
 #### Coding
 * [x] Access IMU Sensors on Phone
-* [] PD+F Logic
+* [x] PD+F Logic
 * [] Use Inverse Kinematics to convert PD+F output to motor power ratios
 * [] Establish efficient OTG communication
 
@@ -134,12 +134,23 @@ There are truly endless possibilities with ballbots. I haven't even touched on p
 *Some interesting resources that have helped me in this project...*
 
 ### How Android Apps Work
-* [The Activity Lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle)
+* [(ANDROID) The Activity Lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle)
 * [(YOUTUBE) How to Build Your First Android App in Java](https://www.youtube.com/watch?v=Wd9TN4fGutM)
+* [(YOUTUBE) How to CREATE a SLIDER in your ANDROID STUDIO APP](https://www.youtube.com/watch?v=nF3qxnIKw-w&t=43s)
+* [(YOUTUBE) How to Change App Icon in Android Studio](https://www.youtube.com/watch?v=bJjHgWjiAKw)
+* [Tag Log Entries](https://stackoverflow.com/questions/8355632/how-do-you-usually-tag-log-entries-android)
+
+### Threads
+* [(ANDROID) Processes and threads overview](https://developer.android.com/guide/components/processes-and-threads)
+* [How Android Threads Work](https://medium.com/@kevinssheva/how-android-threads-work-exploring-main-and-background-threads-together-eb3c1f3e8c39)
+* [Java Daemon Thread](https://www.geeksforgeeks.org/java/daemon-thread-java/)
+* [Thread.sleep() vs ScheduledExecutorService](https://stacknowledge.in/blogs/thread-sleep-vs-scheduledexecutorservice-java-concurrency/)
+* [How do we use runOnUiThread in Android?](https://www.tutorialspoint.com/article/how-do-we-use-runonuithread-in-android)
+* [(YOUTUBE) How to Start a Background Thread in Android](https://www.youtube.com/watch?v=QfQE1ayCzf8)
 
 ### Motion Sensors
 * [Which sensors are required for finding rotation vector](https://stackoverflow.com/questions/30576313/sensor-fusion-which-sensors-are-required-for-finding-rotation-vector)
-* [Android Motion Sensors](https://developer.android.com/develop/sensors-and-location/sensors/sensors_motion#java)
+* [(ANDROID) Motion Sensors](https://developer.android.com/develop/sensors-and-location/sensors/sensors_motion#java)
 
 ### PD+F Controller
 * [(YOUTUBE) Vectors](https://www.youtube.com/watch?v=iXdMpXMuEGI)
@@ -149,3 +160,9 @@ There are truly endless possibilities with ballbots. I haven't even touched on p
 ### Phone+ESP32
 * [(YOUTUBE) ESP32, ESP8266 and Android Communication over USB](https://www.youtube.com/watch?v=CfonnuwjqE4)
 * [(YOUTUBE) ESP32, ESP8266 and Android - Communication over USB, basic code upgraded](https://www.youtube.com/watch?v=LVJ0YeTKmtc)
+
+### Github README Files
+* [Github Docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+* [(YOUTUBE) How To Write a USEFUL README On Github](https://www.youtube.com/watch?v=E6NO0rgFub4)
+* [How to show math equations](https://stackoverflow.com/questions/11256433/how-to-show-math-equations-in-general-githubs-markdownnot-githubs-blog)
+* [(YOUTUBE) GitHub Readme Images Tutorial](https://www.youtube.com/watch?v=hHbWF1Bvgf4)
