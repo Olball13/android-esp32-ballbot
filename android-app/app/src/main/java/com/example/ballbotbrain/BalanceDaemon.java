@@ -6,11 +6,18 @@ import android.util.Log;
 public class BalanceDaemon implements Runnable, IMU.IMUListener {
 
     IMU imu;
-    private IMU.IMUListener uiUpdateIMUListener; // send IMU data back to MainActivity
     PDFController pdfController;
+    MotorMixer motorMixer;
+
+    // send data back to MainActivity
+    public interface UiUpdateListener {
+        void balanceDaemonUpdate(float pitch, float roll, float yaw, float yawR, float tiltHeading, float tiltMagnitude, float tiltRadPerSec, float pdfOutput, int[] motorMixerOutput);
+    }
+    UiUpdateListener uiUpdateListener;
 
     private volatile boolean running = false; // Volatile so not to mistakenly run when said not to
     private Thread thread;
+    private long lastUiUpdateTime = 0;
 
     private volatile float pitch, roll, yaw, yawR, tiltHeading, tiltMagnitude, tiltRadPerSec;
 
@@ -29,6 +36,7 @@ public class BalanceDaemon implements Runnable, IMU.IMUListener {
         this.imu = new IMU(context);
         this.imu.setListener(this);
         this.pdfController = new PDFController();
+        this.motorMixer = new MotorMixer();
     }
 
     public void start() {
@@ -46,14 +54,19 @@ public class BalanceDaemon implements Runnable, IMU.IMUListener {
     @Override
     public void run() {
         while (running) {
+            // Use snapshot of volatile values in this loop
+            float magnitude = tiltMagnitude;
+            float rateOfRotation = tiltRadPerSec;
+            float heading = tiltHeading;
 
-            float pdfOutput = pdfController.output(tiltMagnitude, tiltRadPerSec);
+            float pdfOutput = pdfController.output(magnitude, rateOfRotation);
+            int[] motorMixerOutput = motorMixer.output(heading, pdfOutput);
 
-            // TODO: Add Inverse Kinematics Logic and USB-OTG data transmission
-
-            // pass back to the UI Thread
-            if (uiUpdateIMUListener != null) {
-                uiUpdateIMUListener.onOrientationChanged(pitch, roll, yaw, yawR, tiltHeading, tiltMagnitude, tiltRadPerSec);
+            // pass data back to the UI Thread every 200ms (5 times a second)
+            long currentTime = System.currentTimeMillis();
+            if (uiUpdateListener != null & currentTime - lastUiUpdateTime >= 200) {
+                uiUpdateListener.balanceDaemonUpdate(pitch, roll, yaw, yawR, heading, magnitude, rateOfRotation, pdfOutput, motorMixerOutput);
+                lastUiUpdateTime = currentTime;
             }
 
             // Enforce timing delay
@@ -72,5 +85,5 @@ public class BalanceDaemon implements Runnable, IMU.IMUListener {
         Log.d(getClass().getSimpleName(),"Thread Ended" );
     }
 
-    public void setUIUpdateIMUListener(IMU.IMUListener listener) {this.uiUpdateIMUListener = listener;}
+    public void setUIUpdateListener(UiUpdateListener listener) {this.uiUpdateListener = listener;}
 }

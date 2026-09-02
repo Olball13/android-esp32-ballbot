@@ -9,10 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.slider.Slider;
 
-public class MainActivity extends AppCompatActivity implements IMU.IMUListener {
+public class MainActivity extends AppCompatActivity implements BalanceDaemon.UiUpdateListener {
 
     BalanceDaemon balanceDaemon;
-    TextView pitchInput, rollInput, yawInput, tiltHeadingInput, tiltMagnitudeInput, tiltRoRInput, kpInput, kdInput, kfInput, controlInput;
+    TextView pitchInput, rollInput, yawInput, tiltHeadingInput, tiltMagnitudeInput, tiltRoRInput, kpInput, kdInput, kfInput, controlInput, pwm1Input, pwm2Input, pwm3Input;
     Slider kpSlider, kdSlider, kfSlider;
 
     @Override
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements IMU.IMUListener {
         setContentView(R.layout.activity_main);
 
         balanceDaemon = new BalanceDaemon(this);
-        balanceDaemon.setUIUpdateIMUListener(this);// Register MainActivity to receive the updates
+        balanceDaemon.setUIUpdateListener(this); // Register MainActivity to receive the updates
 
         pitchInput = findViewById(R.id.pitchInput);
         rollInput = findViewById(R.id.rollInput);
@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements IMU.IMUListener {
         kfInput = findViewById(R.id.kfInput);
         kfSlider = findViewById(R.id.kfSlider);
         controlInput = findViewById(R.id.controlInput);
+        pwm1Input = findViewById(R.id.pwm1Input);
+        pwm2Input = findViewById(R.id.pwm2Input);
+        pwm3Input = findViewById(R.id.pwm3Input);
 
         kpSlider.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements IMU.IMUListener {
     }
 
     @Override
-    public void onOrientationChanged(float pitch, float roll, float yaw, float yawR, float tiltHeading, float tiltMagnitude, float tiltRadPerSec) {
+    public void balanceDaemonUpdate(float pitch, float roll, float yaw, float yawR, float tiltHeading, float tiltMagnitude, float tiltRadPerSec, float pdfOutput, int[] motorMixerOutput) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -89,13 +92,13 @@ public class MainActivity extends AppCompatActivity implements IMU.IMUListener {
                 tiltHeadingInput.setText(String.format("Tilt Heading: " + Math.round(Math.toDegrees(tiltHeading)) + " deg"));
                 tiltMagnitudeInput.setText(String.format("Tilt Magnitude: " + Math.round(Math.toDegrees(tiltMagnitude)) + " deg"));
                 tiltRoRInput.setText(String.format("Tilt Rate of Rotation: " + Math.round(Math.toDegrees(tiltRadPerSec)) + " deg/s"));
-
-                // Read directly from balance daemon
-                controlInput.setText(String.format("Control Output: " + (int) balanceDaemon.pdfController.output(tiltMagnitude, tiltRadPerSec)));
+                controlInput.setText(String.format("Control Output: " + (int) pdfOutput));
+                pwm1Input.setText(String.format("PWM 1: " + motorMixerOutput[0]));
+                pwm2Input.setText(String.format("PWM 2: " + motorMixerOutput[1]));
+                pwm3Input.setText(String.format("PWM 3: " + motorMixerOutput[2]));
             }
         });
     }
-
 
     @Override
     protected void onResume() {
